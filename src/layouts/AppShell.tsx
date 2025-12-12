@@ -1,25 +1,16 @@
 /**
- * Main application shell layout component
- * Orchestrates sidebar, topbar, and main content areas with responsive behavior
- * Manages sidebar collapse state and provides the overall app structure
- * TODO: Add responsive behavior for mobile/tablet breakpoints
- * TODO: Implement route-based content loading
+ * Main application shell layout, orchestrating polished UI components.
+ * Manages sidebar collapse state and renders the main app structure.
  */
-
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import MainView from "../components/MainView";
-import CollapseButton from "../components/ui/CollapseButton";
+import routes from "../lib/routes";
 
-interface AppShellProps {
-	children?: React.ReactNode;
-	className?: string;
-}
-
-const AppShell: React.FC<AppShellProps> = ({ children, className = "" }) => {
+const AppShell: React.FC = () => {
 	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-	const [currentRoute, setCurrentRoute] = useState("dashboard");
+	const [currentRoute, setCurrentRoute] = useState("dashboard"); // Default route
 
 	const handleSidebarToggle = () => {
 		setSidebarCollapsed(!sidebarCollapsed);
@@ -27,42 +18,32 @@ const AppShell: React.FC<AppShellProps> = ({ children, className = "" }) => {
 
 	const handleNavigate = (routeId: string) => {
 		setCurrentRoute(routeId);
-		// TODO: Implement actual routing when router is added
-		console.log("Navigate to:", routeId);
+		// Actual routing logic will be implemented later
 	};
 
-	const getPageTitle = () => {
-		const routeMap: Record<string, string> = {
-			dashboard: "Dashboard",
-			board: "Board",
-			tasks: "Tasks",
-			habits: "Habits",
-		};
-		return routeMap[currentRoute] || "Dashboard";
-	};
+	const currentPage = routes.find((r) => r.id === currentRoute);
 
 	return (
-		<div className={`h-screen flex bg-gray-50 dark:bg-gray-900 ${className}`}>
+		<div className='h-screen w-full flex bg-slate-900 text-slate-100 font-sans'>
 			{/* Sidebar */}
-			<Sidebar collapsed={sidebarCollapsed} onNavigate={handleNavigate} />
+			<Sidebar
+				collapsed={sidebarCollapsed}
+				onToggle={handleSidebarToggle}
+				onNavigate={handleNavigate}
+				currentRoute={currentRoute}
+			/>
 
 			{/* Main Content Area */}
 			<div className='flex-1 flex flex-col min-w-0'>
 				{/* Topbar */}
-				<Topbar title={getPageTitle()} />
+				<Topbar title={currentPage?.label} />
 
-				{/* Main View */}
-				<MainView>{children}</MainView>
+				{/* Main View - shows placeholder content */}
+				<MainView />
 			</div>
-
-			{/* Floating Collapse Button (only visible when sidebar is collapsed) */}
-			{sidebarCollapsed && (
-				<div className='fixed left-4 top-20 z-10'>
-					<CollapseButton collapsed={sidebarCollapsed} onToggle={handleSidebarToggle} />
-				</div>
-			)}
 		</div>
 	);
 };
 
 export default AppShell;
+

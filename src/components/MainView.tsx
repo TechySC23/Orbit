@@ -1,9 +1,7 @@
 /**
- * Main content viewport component with scrolling and padding
- * Renders children content in a scrollable area with consistent spacing
- * TODO: Add content loading states when data fetching is implemented
+ * Main content viewport component with scrolling and padding.
+ * Styled according to the design tokens in GEMINI.md.
  */
-
 import React from "react";
 
 interface MainViewProps {
@@ -15,17 +13,17 @@ const MainView: React.FC<MainViewProps> = ({ children, className = "" }) => {
 	return (
 		<main
 			className={`
-        flex-1 overflow-y-auto p-6 
-        bg-gray-50 dark:bg-gray-900
+        flex-1 overflow-y-auto p-8 
+        bg-slate-900
         ${className}
       `}
 			role='main'
 			aria-label='Main content area'>
-			<div className='max-w-7xl mx-auto'>
+			<div className='max-w-full mx-auto'>
 				{children || (
-					<div className='text-center py-12'>
-						<h2 className='text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2'>Welcome to Orbit</h2>
-						<p className='text-gray-600 dark:text-gray-400'>Dashboard coming soon</p>
+					<div className='text-center py-20'>
+						<h2 className='text-2xl font-semibold text-slate-200 mb-2'>View is empty</h2>
+						<p className='text-slate-400'>Select an item from the sidebar to get started.</p>
 					</div>
 				)}
 			</div>
@@ -34,3 +32,4 @@ const MainView: React.FC<MainViewProps> = ({ children, className = "" }) => {
 };
 
 export default MainView;
+

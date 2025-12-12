@@ -1,18 +1,21 @@
 /**
  * Route definitions for the Orbit application navigation
- * TODO: Replace with real route objects when backend integration is added
+ * Includes `lucide-react` icons for consistent UI
  */
 
+import { LayoutDashboard, Kanban, ListTodo, Repeat, type LucideIcon } from "lucide-react";
+
 export interface Route {
-  id: string;
-  label: string;
+	id: string;
+	label: string;
+	icon: LucideIcon;
 }
 
 export const routes: Route[] = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'board', label: 'Board' },
-  { id: 'tasks', label: 'Tasks' },
-  { id: 'habits', label: 'Habits' },
+	{ id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+	{ id: "board", label: "Board", icon: Kanban },
+	{ id: "tasks", label: "Tasks", icon: ListTodo },
+	{ id: "habits", label: "Habits", icon: Repeat },
 ];
 
 export default routes;
