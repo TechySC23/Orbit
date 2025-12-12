@@ -68,11 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, onNavigate, clas
                 w-full flex items-center px-4 py-3 rounded-xl
                 text-lg transition-colors duration-200
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60
-                ${
-									isSelected ?
-										"bg-slate-800 text-sky-400 border-r-4 border-sky-500/60"
-									:	"text-slate-300 hover:bg-slate-800/70"
-								}
+                ${isSelected ? "bg-slate-800 text-sky-400 border-r-4 border-sky-500/60" : "text-slate-300 hover:bg-slate-800/70"}
                 ${collapsed ? "justify-center" : ""}
               `}
 							aria-current={isSelected ? "page" : undefined}
@@ -96,4 +92,3 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, onNavigate, clas
 };
 
 export default Sidebar;
-

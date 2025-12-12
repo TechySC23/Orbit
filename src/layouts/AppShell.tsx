@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
@@ -10,7 +9,7 @@ import SettingsModal from "../components/SettingsModal";
 import AddButton from "../components/AddButton";
 
 const AppShellContent: React.FC = () => {
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 	const { currentRoute, setCurrentRoute } = useUI();
 
 	const handleSidebarToggle = () => {
@@ -21,34 +20,27 @@ const AppShellContent: React.FC = () => {
 
 	return (
 		<div className='h-screen w-full flex bg-slate-900 text-slate-100 font-sans'>
-			<Sidebar
-				collapsed={sidebarCollapsed}
-				onToggle={handleSidebarToggle}
-				onNavigate={setCurrentRoute}
-				currentRoute={currentRoute}
-			/>
+			<Sidebar collapsed={sidebarCollapsed} onToggle={handleSidebarToggle} onNavigate={setCurrentRoute} currentRoute={currentRoute} />
 
 			<div className='flex-1 flex flex-col min-w-0'>
 				<Topbar title={currentPage?.label} />
 				<MainView />
 			</div>
 
-            {/* Modals and Global UI */}
-            <AddTaskModal />
-            <SettingsModal />
-            <AddButton />
+			{/* Modals and Global UI */}
+			<AddTaskModal />
+			<SettingsModal />
+			<AddButton />
 		</div>
 	);
-}
-
+};
 
 const AppShell: React.FC = () => {
-    return (
-        <UIProvider>
-            <AppShellContent />
-        </UIProvider>
-    )
-}
+	return (
+		<UIProvider>
+			<AppShellContent />
+		</UIProvider>
+	);
+};
 
 export default AppShell;
-

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Search, Settings as SettingsIcon } from "lucide-react";
 import ThemeToggle from "./ui/ThemeToggle";
@@ -11,7 +10,7 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ title = "Dashboard", className = "" }) => {
-    const { setSettingsModalOpen } = useUI();
+	const { setSettingsModalOpen } = useUI();
 
 	return (
 		<header
@@ -59,17 +58,16 @@ const Topbar: React.FC<TopbarProps> = ({ title = "Dashboard", className = "" }) 
 
 			{/* Right side - Utilities */}
 			<div className='flex-1 flex items-center justify-end space-x-2'>
-				<div className="hidden md:block">
-                    <Pomodoro />
-                </div>
+				<div className='hidden md:block'>
+					<Pomodoro />
+				</div>
 
-                <button 
-                    onClick={() => setSettingsModalOpen(true)}
-                    className="p-2 rounded-full hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-sky-500/60"
-                    aria-label="Open Settings"
-                >
-                    <SettingsIcon className="h-6 w-6 text-slate-300" />
-                </button>
+				<button
+					onClick={() => setSettingsModalOpen(true)}
+					className='p-2 rounded-full hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-sky-500/60'
+					aria-label='Open Settings'>
+					<SettingsIcon className='h-6 w-6 text-slate-300' />
+				</button>
 
 				<ThemeToggle />
 			</div>
@@ -78,4 +76,3 @@ const Topbar: React.FC<TopbarProps> = ({ title = "Dashboard", className = "" }) 
 };
 
 export default Topbar;
-

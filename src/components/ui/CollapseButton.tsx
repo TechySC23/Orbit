@@ -15,10 +15,11 @@ interface CollapseButtonProps {
 const CollapseButton: React.FC<CollapseButtonProps> = ({ collapsed, onToggle, className = "" }) => {
 	return (
 		<IconButton aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} onClick={onToggle} className={className} variant='ghost' size='sm'>
-			{collapsed ? <PanelRight className='h-5 w-5' /> : <PanelLeft className='h-5 w-5' />}
+			{collapsed ?
+				<PanelRight className='h-5 w-5' />
+			:	<PanelLeft className='h-5 w-5' />}
 		</IconButton>
 	);
 };
 
 export default CollapseButton;
-
