@@ -1,33 +1,36 @@
-/**
- * Theme switching component that toggles between light and dark modes
- * Manages data-theme attribute on documentElement and uses lucide-react icons.
- */
-import React, { useState, useEffect } from "react";
+
+import React, { useCallback, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 import IconButton from "./IconButton";
+import { useUI } from "../../state/uiStore";
 
 const ThemeToggle: React.FC = () => {
-	// Default to dark mode as per GEMINI.md, but check for system preference/localStorage
-	const [isDark, setIsDark] = useState(true);
+    const { settings, setSettings } = useUI();
+    const isDark = settings.theme === 'dark';
 
-	useEffect(() => {
-		const storedTheme = localStorage.getItem("orbit-theme");
-		const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-		const initialIsDark = storedTheme ? storedTheme === "dark" : systemPrefersDark;
+	const toggleTheme = useCallback(() => {
+		setSettings({ theme: isDark ? 'light' : 'dark' });
+	}, [isDark, setSettings]);
 
-		setIsDark(initialIsDark);
-		document.documentElement.classList.toggle("dark", initialIsDark);
-	}, []);
-
-	const toggleTheme = () => {
-		const newIsDark = !isDark;
-		setIsDark(newIsDark);
-		localStorage.setItem("orbit-theme", newIsDark ? "dark" : "light");
-		document.documentElement.classList.toggle("dark", newIsDark);
-	};
+    useEffect(() => {
+        const handleKeyPress = (e: KeyboardEvent) => {
+            if (e.key === '.') {
+                e.preventDefault();
+                toggleTheme();
+            }
+        };
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [toggleTheme]);
 
 	return (
-		<IconButton aria-label={`Switch to ${isDark ? "light" : "dark"} theme`} onClick={toggleTheme} variant='ghost' size='md'>
+		<IconButton 
+            aria-label={`Switch to ${isDark ? "light" : "dark"} theme (.)`}
+            title={`Switch to ${isDark ? "light" : "dark"} theme (.)`}
+            onClick={toggleTheme} 
+            variant='ghost' 
+            size='md'
+        >
 			{isDark ? <Sun className='h-5 w-5' /> : <Moon className='h-5 w-5' />}
 		</IconButton>
 	);

@@ -1,10 +1,9 @@
-/**
- * Top navigation bar with page title, search, and utility components.
- * Styled according to the design tokens in GEMINI.md.
- */
+
 import React from "react";
-import { Search, Clock4 } from "lucide-react";
+import { Search, Settings as SettingsIcon } from "lucide-react";
 import ThemeToggle from "./ui/ThemeToggle";
+import Pomodoro from "./Pomodoro";
+import { useUI } from "../state/uiStore";
 
 interface TopbarProps {
 	title?: string;
@@ -12,6 +11,8 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ title = "Dashboard", className = "" }) => {
+    const { setSettingsModalOpen } = useUI();
+
 	return (
 		<header
 			className={`
@@ -58,11 +59,17 @@ const Topbar: React.FC<TopbarProps> = ({ title = "Dashboard", className = "" }) 
 
 			{/* Right side - Utilities */}
 			<div className='flex-1 flex items-center justify-end space-x-2'>
-				{/* Pomodoro widget placeholder */}
-				<div className='hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/70 text-slate-400'>
-					<Clock4 className='h-5 w-5' />
-					<span className='text-sm font-medium'>25:00</span>
-				</div>
+				<div className="hidden md:block">
+                    <Pomodoro />
+                </div>
+
+                <button 
+                    onClick={() => setSettingsModalOpen(true)}
+                    className="p-2 rounded-full hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-sky-500/60"
+                    aria-label="Open Settings"
+                >
+                    <SettingsIcon className="h-6 w-6 text-slate-300" />
+                </button>
 
 				<ThemeToggle />
 			</div>
