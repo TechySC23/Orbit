@@ -86,7 +86,7 @@ Commands:
 
 ```bash
 # clone (once)
-git clone <repo-url> orbit
+git clone https://github.com/TechySC23/Orbit.git orbit
 cd orbit
 
 # install dependencies
