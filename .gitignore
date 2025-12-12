@@ -171,3 +171,4 @@ dist/
 .env
 .DS_Store
 .vscode/
+.kilocode/
