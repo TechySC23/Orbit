@@ -3,7 +3,7 @@
  * Displays app logo, navigation items with lucide-react icons, and a collapse button.
  * Supports keyboard navigation and highlights the active route.
  */
-import React, { useState } from "react";
+
 import routes from "../lib/routes";
 import useKeyboardNav from "../hooks/useKeyboardNav";
 import CollapseButton from "./ui/CollapseButton";
@@ -18,19 +18,16 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, onNavigate, className = "", currentRoute }) => {
-	const getInitialIndex = () => routes.findIndex((r) => r.id === currentRoute);
-	const [selectedIndex, setSelectedIndex] = useState(getInitialIndex);
+ // No longer unused after updating logic
 
 	const { onKeyDown } = useKeyboardNav({
 		itemCount: routes.length,
 		onSelectItem: (index) => {
-			setSelectedIndex(index);
 			onNavigate?.(routes[index].id);
 		},
 	});
 
-	const handleNavigate = (routeId: string, index: number) => {
-		setSelectedIndex(index);
+	const handleNavigate = (routeId: string) => {
 		onNavigate?.(routeId);
 	};
 
@@ -63,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, onNavigate, clas
 						<button
 							key={route.id}
 							data-nav-index={index}
-							onClick={() => handleNavigate(route.id, index)}
+							onClick={() => handleNavigate(route.id)}
 							className={`
                 w-full flex items-center px-4 py-3 rounded-xl
                 text-lg transition-colors duration-200

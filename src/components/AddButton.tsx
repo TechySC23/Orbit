@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Plus } from "lucide-react";
-import { useUI } from "../state/uiStore";
+import { useUI } from "../state/useUI";
 
 const AddButton = () => {
 	const { setAddTaskModalOpen, settings } = useUI();

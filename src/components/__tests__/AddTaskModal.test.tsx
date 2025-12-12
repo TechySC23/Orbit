@@ -1,12 +1,11 @@
-import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import AddTaskModal from "../AddTaskModal";
-import { useUI } from "../../state/uiStore";
 import { vi } from "vitest";
 
 // Mock the useUI hook
-vi.mock("../../state/uiStore", () => ({
-	useUI: vi.fn(),
+const mockUseUI = vi.fn();
+vi.mock("../../state/useUI", () => ({
+	useUI: mockUseUI,
 }));
 
 const mockSetAddTaskModalOpen = vi.fn();
@@ -18,7 +17,7 @@ describe("AddTaskModal Component", () => {
 	});
 
 	it("should not render when isAddTaskModalOpen is false", () => {
-		(useUI as jest.Mock).mockReturnValue({
+		mockUseUI.mockReturnValue({
 			isAddTaskModalOpen: false,
 			setAddTaskModalOpen: mockSetAddTaskModalOpen,
 			addTask: mockAddTask,
@@ -29,7 +28,7 @@ describe("AddTaskModal Component", () => {
 	});
 
 	it("should render when isAddTaskModalOpen is true", () => {
-		(useUI as jest.Mock).mockReturnValue({
+		mockUseUI.mockReturnValue({
 			isAddTaskModalOpen: true,
 			setAddTaskModalOpen: mockSetAddTaskModalOpen,
 			addTask: mockAddTask,
@@ -40,7 +39,7 @@ describe("AddTaskModal Component", () => {
 	});
 
 	it("should close when the escape key is pressed", () => {
-		(useUI as jest.Mock).mockReturnValue({
+		mockUseUI.mockReturnValue({
 			isAddTaskModalOpen: true,
 			setAddTaskModalOpen: mockSetAddTaskModalOpen,
 			addTask: mockAddTask,
@@ -52,7 +51,7 @@ describe("AddTaskModal Component", () => {
 	});
 
 	it("should not save a task if the title is empty", () => {
-		(useUI as jest.Mock).mockReturnValue({
+		mockUseUI.mockReturnValue({
 			isAddTaskModalOpen: true,
 			setAddTaskModalOpen: mockSetAddTaskModalOpen,
 			addTask: mockAddTask,
@@ -65,7 +64,7 @@ describe("AddTaskModal Component", () => {
 	});
 
 	it("should save a task when the title is provided", () => {
-		(useUI as jest.Mock).mockReturnValue({
+		mockUseUI.mockReturnValue({
 			isAddTaskModalOpen: true,
 			setAddTaskModalOpen: mockSetAddTaskModalOpen,
 			addTask: mockAddTask,

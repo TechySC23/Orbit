@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, RotateCcw } from "lucide-react";
-import { useUI } from "../state/uiStore";
+import { useUI } from "../state/useUI";
 
 type TimerMode = "session" | "shortBreak" | "longBreak";
 
@@ -37,22 +37,32 @@ const Pomodoro = () => {
 			interval = setInterval(() => {
 				setTimeRemaining((prev) => prev - 1);
 			}, 1000);
-		} else if (timeRemaining === 0) {
-			// Simple logic: auto-switch to short break after session
-			if (mode === "session") {
-				setMode("shortBreak");
-				setTimeRemaining(MODE_DURATIONS.shortBreak);
-			} else {
-				setMode("session");
-				setTimeRemaining(MODE_DURATIONS.session);
-			}
-			setIsRunning(false); // Pause on switch
 		}
-
 		return () => {
 			if (interval) clearInterval(interval);
 		};
-	}, [isRunning, timeRemaining, mode]);
+	}, [isRunning, timeRemaining]);
+
+    // Effect for switching mode when timer ends
+    useEffect(() => {
+        if (timeRemaining === 0 && isRunning === false) {
+            let newMode: TimerMode;
+            let newTime: number;
+
+            if (mode === "session") {
+                newMode = "shortBreak";
+                newTime = MODE_DURATIONS.shortBreak;
+            } else {
+                newMode = "session";
+                newTime = MODE_DURATIONS.session;
+            }
+
+            setTimeout(() => {
+                setMode(newMode);
+                setTimeRemaining(newTime);
+            }, 0);
+        }
+    }, [timeRemaining, isRunning, mode, setMode, setTimeRemaining]);
 
 	useEffect(() => {
 		const handleKeyPress = (e: KeyboardEvent) => {

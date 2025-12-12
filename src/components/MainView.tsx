@@ -1,6 +1,6 @@
-import React from "react";
-import { useUI, Task } from "../state/uiStore";
-import { CheckCircle2, Circle, MoreHorizontal, Trash2 } from "lucide-react";
+import { useUI } from "../state/useUI";
+import { type Task } from "../state/uiTypes";
+import { CheckCircle2, Circle, Trash2 } from "lucide-react";
 
 // == TaskList Component (local to MainView) ==
 const TaskItem = ({ task }: { task: Task }) => {

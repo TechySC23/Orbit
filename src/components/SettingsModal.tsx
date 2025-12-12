@@ -1,5 +1,6 @@
-import React, { useEffect, useCallback, useRef } from "react";
-import { useUI, Settings } from "../state/uiStore";
+import { useEffect, useCallback, useRef } from "react";
+import { useUI } from "../state/useUI";
+import { type Settings } from "../state/uiTypes";
 import { X } from "lucide-react";
 
 // A simple focus trap hook for accessibility - duplicated here for simplicity
@@ -9,7 +10,9 @@ const useFocusTrap = (isOpen: boolean) => {
 	useEffect(() => {
 		if (!isOpen || !modalRef.current) return;
 
-		const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        const currentModalRef = modalRef.current; // Capture the ref value
+
+		const focusableElements = currentModalRef.querySelectorAll<HTMLElement>(
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
 		);
 		const firstElement = focusableElements[0];
@@ -33,10 +36,10 @@ const useFocusTrap = (isOpen: boolean) => {
 		};
 
 		firstElement?.focus();
-		modalRef.current.addEventListener("keydown", handleTabKeyPress);
+		currentModalRef.addEventListener("keydown", handleTabKeyPress);
 
 		return () => {
-			modalRef.current?.removeEventListener("keydown", handleTabKeyPress);
+			currentModalRef?.removeEventListener("keydown", handleTabKeyPress);
 		};
 	}, [isOpen]);
 
@@ -51,7 +54,7 @@ const SettingsModal = () => {
 		setSettingsModalOpen(false);
 	}, [setSettingsModalOpen]);
 
-	const handleSettingChange = (key: keyof Settings, value: any) => {
+	const handleSettingChange = <T extends keyof Settings>(key: T, value: Settings[T]) => {
 		setSettings({ [key]: value });
 	};
 

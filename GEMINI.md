@@ -1,4 +1,4 @@
-# GEMINI_GLOBAL.md — AI Operating Manual for Orbit
+# GEMINI.md
 
 **Audience:** This document is written *for the AI*. It is the authoritative global context for any AI assistant (Gemini CLI, Copilot-style agents) working on **Orbit**. Read this first and follow it strictly for all code generation, edits, and suggestions.
 
@@ -131,6 +131,7 @@ Do not print whole file contents in the final report unless explicitly asked.
 
 * If TypeScript errors are likely, explain the minimal type change necessary to fix them. Show only the specific line or small snippet to update, not the entire file.
 * For runtime errors, suggest where to place console logs or how to inspect component props/state.
+* If stuck in an To Do (write_todos tool) loop, then complete the in progress task and continue with the task.
 
 ---
 

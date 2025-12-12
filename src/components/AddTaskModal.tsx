@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useUI, Task } from "../state/uiStore";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useUI } from "../state/useUI";
+import { type Task } from "../state/uiTypes";
 import { X } from "lucide-react";
 
 // A simple focus trap hook for accessibility
@@ -9,7 +10,9 @@ const useFocusTrap = (isOpen: boolean) => {
 	useEffect(() => {
 		if (!isOpen || !modalRef.current) return;
 
-		const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        const currentModalRef = modalRef.current; // Capture the ref value
+
+		const focusableElements = currentModalRef.querySelectorAll<HTMLElement>(
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
 		);
 		const firstElement = focusableElements[0];
@@ -34,10 +37,10 @@ const useFocusTrap = (isOpen: boolean) => {
 		};
 
 		firstElement?.focus();
-		modalRef.current.addEventListener("keydown", handleTabKeyPress);
+		currentModalRef.addEventListener("keydown", handleTabKeyPress);
 
 		return () => {
-			modalRef.current?.removeEventListener("keydown", handleTabKeyPress);
+			currentModalRef?.removeEventListener("keydown", handleTabKeyPress);
 		};
 	}, [isOpen]);
 
@@ -45,7 +48,7 @@ const useFocusTrap = (isOpen: boolean) => {
 };
 
 const AddTaskModal = () => {
-	const { isAddTaskModalOpen, setAddTaskModalOpen, addTask, settings } = useUI();
+	const { isAddTaskModalOpen, setAddTaskModalOpen, addTask } = useUI();
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [dueDate, setDueDate] = useState("");
@@ -155,7 +158,7 @@ const AddTaskModal = () => {
 							<select
 								id='task-priority'
 								value={priority}
-								onChange={(e) => setPriority(e.target.value as any)}
+								onChange={(e) => setPriority(e.target.value as "low" | "medium" | "high")}
 								className='w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500'>
 								<option value='low'>Low</option>
 								<option value='medium'>Medium</option>
