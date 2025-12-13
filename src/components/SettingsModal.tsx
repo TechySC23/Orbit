@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from "react";
-import { useUI } from "../state/useUI";
+import { useUI } from "../state/uiStore";
 import { type Settings } from "../state/uiTypes";
 import { X } from "lucide-react";
 
@@ -10,7 +10,7 @@ const useFocusTrap = (isOpen: boolean) => {
 	useEffect(() => {
 		if (!isOpen || !modalRef.current) return;
 
-        const currentModalRef = modalRef.current; // Capture the ref value
+		const currentModalRef = modalRef.current; // Capture the ref value
 
 		const focusableElements = currentModalRef.querySelectorAll<HTMLElement>(
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
@@ -97,7 +97,7 @@ const SettingsModal = () => {
 						<select
 							id='font-select'
 							value={settings.font}
-							onChange={(e) => handleSettingChange("font", e.target.value)}
+							onChange={(e) => handleSettingChange("font", e.target.value as "Inter" | "Roboto" | "Sora")}
 							className='w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-100 focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500'>
 							<option value='Inter'>Inter</option>
 							<option value='Roboto'>Roboto</option>

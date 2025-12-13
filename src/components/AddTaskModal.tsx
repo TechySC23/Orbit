@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useUI } from "../state/useUI";
+import { useUI } from "../state/uiStore";
 import { type Task } from "../state/uiTypes";
 import { X } from "lucide-react";
 

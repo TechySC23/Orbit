@@ -1,4 +1,4 @@
-import { useUI } from "../state/useUI";
+import { useUI } from "../state/uiStore";
 import { type Task } from "../state/uiTypes";
 import { CheckCircle2, Circle, Trash2 } from "lucide-react";
 

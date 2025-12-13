@@ -1,5 +1,5 @@
 // src/state/uiUtils.ts
-import { Settings, Task } from "./uiTypes";
+import type { Settings, Task } from "./uiTypes";
 
 export const getInitialSettings = (): Settings => {
   const savedSettings = localStorage.getItem('orbit:settings');

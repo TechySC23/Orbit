@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, RotateCcw } from "lucide-react";
-import { useUI } from "../state/useUI";
+import { useUI } from "../state/uiStore";
 
 type TimerMode = "session" | "shortBreak" | "longBreak";
 
