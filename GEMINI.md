@@ -1,150 +1,521 @@
 # GEMINI.md
 
-**Audience:** This document is written *for the AI*. It is the authoritative global context for any AI assistant (Gemini CLI, Copilot-style agents) working on **Orbit**. Read this first and follow it strictly for all code generation, edits, and suggestions.
+## Project Name: Orbit  
 
-**Project identity reminder (do not hallucinate):**
-
-* **Project name:** Orbit
-* **Type:** Local-first productivity (To‑Do) application
-* **Target for this repo:** **v0.1‑alpha** (web MVP; desktop shell via Tauri planned later)
-* **Core user problems Orbit solves:** private task management, focused workflows (Pomodoro), flexible views (list & Kanban), high customisability, fast offline-first UX.
+**A Local-First, Offline-Capable Productivity System**
 
 ---
 
-## Primary mission for the AI
+## 0. Purpose of This File (Critical)
 
-When invoked in this repository, your job is to act as a dependable engineering teammate who:
+This file exists primarily for **AI agents** (Gemini CLI, coding assistants, refactoring tools) that work on the Orbit codebase.  
+It is the **primary and authoritative source** for all architectural, philosophical, and procedural decisions.
 
-1. Produces **correct**, **maintainable**, and **typed** TypeScript + React code.
-2. Prioritises **clarity, accessibility, and UI polish** for the v0.1‑alpha web MVP.
-3. Avoids adding features that are out of scope for v0.1 (no storage layer changes, no sync, no AI features beyond opt‑in placeholders).
-4. Writes small, well‑scoped changes and explains them concisely. Do not overwrite large files unless explicitly instructed.
+Its job is to:
 
-Always reference the project local `GEMINI.md` for task‑level constraints; use this global file as higher‑level policy and style guidance.
+- **Prevent architectural drift**  
+  By defining fixed technical boundaries (Section 6) and non-negotiable laws (Section 7), all code must align with the established structure.
 
----
+- **Prevent duplicated state or logic**  
+  By mandating a Single Source of Truth for core data, we avoid inconsistent state and long-term maintenance issues.
 
-## Tech stack (truthful and exact)
+- **Prevent “tool loops”**  
+  The planning and execution rules in Section 9 force sequential, executable steps instead of endless planning.
 
-* **Frontend:** React + TypeScript + Vite (web) — this is the immediate working environment.
-* **Styling:** Tailwind CSS v4 via `@tailwindcss/vite`. Use Tailwind utility classes; only add CSS modules for micro‑layout exceptions.
-* **Icons:** `lucide-react` is allowed and recommended for consistent iconography. No other new UI libraries without explicit instruction.
-* **State:** Local component state and small stores (Zustand) may be used later; do not introduce heavy state libraries preemptively.
-* **Persistence & packaging:** IndexedDB for web MVP (abstractions already present); Tauri + SQLite planned for desktop packaging after v0.1. Do not modify storage adapters in this pass.
+- **Force disciplined, verifiable development**  
+  Every change must map to the roadmap and satisfy the Definition of Done.
 
----
+- **Ensure consistent decision-making**  
+  This document acts as a canonical style guide, decision log, and scope boundary.
 
-## Scope boundaries (hard rules)
-
-* **Allowed:** UI polish, accessibility improvements, layout refactors, component extraction, icon replacement, design token unification, small helper hooks for UI logic, and TypeScript typing fixes. Add tests or lint config where appropriate but keep changes minimal and focused.
-* **Forbidden:** Implementing full persistence/sync, adding or changing API keys, integrating third‑party backend services, large rewrites of architecture, or introducing major new dependencies (exceptions require explicit approval).
-
-If asked to implement forbidden items, refuse and instead propose a minimal UI placeholder and a clear plan for the future work.
+If instructions here conflict with assumptions made by an AI (for example, assuming a cloud dependency), **this file overrides the AI’s assumptions**.
 
 ---
 
-## Design tokens & visual system (v0.1 canonical)
+## 1. High-Level Vision
 
-Use these tokens consistently in components you touch.
+Orbit is a **local-first productivity application** designed to be a complete personal digital workspace.  
+Its core purpose is to manage **tasks, time, and focus** without reliance on external services.
 
-**Color / semantic tokens (Tailwind classes):**
+Orbit must be:
 
-* Background: `bg-slate-900` (app shell) / `bg-slate-800` (main content)
-* Sidebar: `bg-slate-950` with subtle `border-r border-slate-800`
-* Primary text: `text-slate-100`; secondary: `text-slate-300`
-* Accent: `sky-400` for icons/text; selection border: `border-sky-500/60`
-* Focus ring: `ring-2 ring-sky-500/60` for interactive elements
+- **Fully usable without internet access**  
+  All canonical data is stored locally (SQLite / IndexedDB). Network loss must never interrupt workflow.
 
-**Spacing & shapes:**
+- **Fast on low-end hardware**  
+  Achieved through minimal dependencies, efficient React rendering, and a Tauri + Rust backend.
 
-* Use `rounded-lg` / `rounded-xl` for cards and nav items.
-* Sidebar nav items: `px-4 py-3 gap-3 flex items-center`. Icon container: `w-8 h-8 flex items-center justify-center rounded-md bg-slate-700/40`.
+- **Private by default**  
+  User data never leaves the device unless the user explicitly opts in. No telemetry. No analytics.
 
-**Typography guidelines:**
+- **Deeply customizable without being overwhelming**  
+  Customization is progressively disclosed. Simple defaults first, deep control later.
 
-* App title (sidebar): `text-4xl font-extrabold` (desktop).
-* Page title (topbar): `text-3xl font-semibold`.
-* Navigation labels: `text-lg`.
+- **Suitable for beginners and advanced users**  
+  Simple task entry for newcomers; keyboard-first, automation-ready workflows for power users.
 
----
+- **Easy to maintain and extend**  
+  Enforced via strict TypeScript, Zod validation, and separation of concerns.
 
-## Accessibility & semantics (non-negotiable)
+Orbit is **not** a clone of any existing app.  
+It is a synthesis of proven ideas, built with modern tooling and a rigid architectural spine.
 
-* Use semantic HTML (or ARIA roles for complex widgets): `<nav>`, `<main>`, `<header>`, `<aside>`. For React components that are interactive, use proper `<button>` elements rather than generic `<div>` where possible.
-* All interactive controls must be keyboard accessible and show a visible focus indicator. Use `tabIndex` only when necessary and explain why in a brief comment.
-* Add `aria-expanded` to collapse controls, `aria-label` for icon-only buttons, and `role="navigation"` for the sidebar.
-* Confirm color contrast for critical text and controls; prefer higher-contrast utility classes from the slate palette.
+Orbit must feel:
 
----
-
-## File & component conventions
-
-* One component per file. File names must match component PascalCase (e.g., `Sidebar.tsx`). Small UI primitives may live under `/src/components/ui/`.
-* Export default the component as the primary export. Also export types where public (e.g., `export type NavItem = { id: string; label: string }`).
-* Keep components under ~200 lines where feasible; if logic grows, extract to a hook inside `/src/hooks/`.
+- **Calm, not noisy**  
+- **Capable, not bloated**  
+- **Powerful, not confusing**
 
 ---
 
-## Commit & PR expectations
+## 2. Core Philosophy
 
-* Provide a concise Conventional Commit message for each atomic change. Single milestone UI polish should be a single commit: e.g. `feat(ui): polish app shell, sidebar, topbar, and main view (v0.1-alpha)`.
-* If you generate multiple logical changes, group them into small commits with clear scopes.
-* A PR should include a short testing checklist and any manual validation steps.
+### 2.1 Local-First First Principles
 
----
+Orbit follows the strongest interpretation of the local-first model:
 
-## When addressing issues or refactors
+- Core features must work with **zero network access**
+- No account is required for core functionality
+- All user data lives locally by default
+- Sync, AI, and cloud features are **optional layers**, never dependencies
 
-Follow this thought process before editing code:
-
-1. Reproduce/confirm the issue in reasoning. (If needed, ask for the minimal terminal output or failing screenshot.)
-2. Identify the smallest safe change that resolves the root cause.
-3. Implement the change, add a brief inline comment (1 line) why this pattern was chosen. Avoid speculative refactors.
-4. Run `tsc` mentally to ensure types line up; avoid introducing `any`.
-
-If a requested change requires broad architectural work, produce a step-by-step migration plan rather than implementing it in one go.
+Local-first is **not an optimization**.  
+It is the default operating mode, chosen for latency, reliability, and data ownership.
 
 ---
 
-## How to respond in output from Gemini CLI operations
+### 2.2 Open Source ≠ Rough Edges
 
-When you modify files, in your final reply to the user provide:
+Orbit is open source, but:
 
-1. A list of changed files (paths).
-2. One combined Conventional Commit message covering all changes.
-3. A short testing checklist specific to the changes.
-4. Any follow-up suggestions or risks (1–3 bullet points).
+- UI must feel intentional and polished
+- Code must be readable and conventional
+- State must be predictable and explicit
+- Features must be finished or explicitly disabled
 
-Do not print whole file contents in the final report unless explicitly asked.
-
----
-
-## Prompt interpretation rules
-
-* If the human asks for design direction or multiple credible options, propose 2 options and recommend one with a short rationale. Implementation follows the single chosen option.
-* If the human provides a codebase snippet to change, only edit the necessary lines and keep modifications minimal.
-* Never invent external services, endpoints, or credentials. If the human asks for integrations, request user approval and a plan.
+Incomplete experiments must **never** ship as half-features.
 
 ---
 
-## Error handling & debugging guidance for AI
+### 2.3 Simple Defaults, Infinite Depth
 
-* If TypeScript errors are likely, explain the minimal type change necessary to fix them. Show only the specific line or small snippet to update, not the entire file.
-* For runtime errors, suggest where to place console logs or how to inspect component props/state.
-* If stuck in an To Do (write_todos tool) loop, then complete the in progress task and continue with the task.
+Orbit must be usable in under 5 minutes:
+
+- Add a task
+- Start a Pomodoro
+- Change a theme
+- View tasks
+- Basic keyboard navigation
+- Hyper fast navigation (command palette later)
+
+At the same time, Orbit must allow:
+
+- Advanced workflows (filters, automation, scripting later)
+- Deep UI customization (fonts, colors, layouts, themes, colors, text size, etc.)
+- Keyboard-first navigation, and mouse for beginners.
+- Power-user features without friction
+
+Nothing advanced is forced on beginners.
 
 ---
 
-## Exit & safe-fail behavior
+## 3. Target Users
 
-* If uncertain about a destructive change, do not commit. Instead produce a clear plan and small, reversible patch.
-* If you cannot satisfy the user request due to scope or missing context, explain why and propose a bounded alternative.
+### Students
+
+- Assignments and deadlines
+- Study sessions with Pomodoro
+- Habit building
+- Minimal friction note-taking
+
+### Professionals
+
+- Project planning
+- Task prioritization
+- Time tracking via focus sessions
+- Keyboard-driven workflows
+
+### Power Users
+
+- Custom themes
+- Plugin system (future)
+- Automation hooks
+- Full data ownership
+
+All three groups must be supported **without fragmenting the app**.
 
 ---
 
-## Final note — do not hallucinate
+## 4. Feature Scope (Authoritative)
 
-* Always base changes on actual files in the repository. If you cannot find a file referenced in a prompt, report exactly which files were missing and offer a safe alternative.
-* This file overrides previous global context files; it represents the authoritative guidance for Orbit.
+### 4.1 Task System
 
-***End of GEMINI_GLOBAL.md***
+The Task is the atomic unit of Orbit.
+
+- Tasks (name, description, priority, date{today, tomorrow, weekend, few hours later, evening, morning, etc.}, etc.)
+- Sub-tasks (recursive, shallow by default: max 3 levels, not quantitatively enforced)
+- Priorities (user-configurable)
+- Due dates and soft deadlines
+- Recurring tasks
+- States: todo / doing / done / archived, (customizable in future)
+- Filters (by state, priority, tags, due date)
+- Sorting (by due date, priority, creation date, custom)
+- Actions supported even as bulk (change state, delete, tag, prioritize, duplicate, copy.)
+- Quick add (natural language support planned)
+
+Bonus features:
+
+- Tags (user-defined, multi-select)
+- Import / export (JSON, CSV, markdown, etc. future)
+- Pinnable. (future)
+- Won't Do. (postpone like feature) [unplanned.]
+
+Archived tasks are hidden by default but always searchable.
+
+---
+
+### 4.2 Views
+
+Views are **pure projections of state**.
+
+- Classic list view
+- Kanban view - columns based on task state (Drag and drop to change state)
+- Eisenhower Matrix (future)
+- Upcoming, Today, Overdue smart views
+- Custom views (future)
+- Future calendar/timeline support
+
+Bonus features:
+
+- Grouping (by tag, priority, due date)
+- Collapsible sections
+
+Views **do not own state**.  
+They render filtered/sorted data from the store.
+
+---
+
+### 4.3 Pomodoro & Focus
+
+- Configurable Pomodoro cycles
+- Task-linked sessions
+- Local persistence of sessions
+- Session history and stats (local only)
+- Optional short breaks and long breaks
+- Support for timeline view of the day's pomodoro sessions. (future)
+
+Pomodoro must:
+
+- Work offline
+- Survive reloads
+- Never block task interaction
+- Be customizable
+- Support notifications (local only)
+- Also support ambient sounds (optional, future.)
+
+---
+
+### 4.4 Notes System
+
+Notes are task-attached by default, but extensible.
+
+Baseline:
+
+- Markdown support
+- Inline formatting
+- Code blocks
+
+Planned:
+
+- Block-based note model (Notion-style, local, toggleable)
+- Structured storage (not raw strings)
+- Extensible block types
+
+Notes must be:
+
+- Fast
+- Exportable
+- Non-proprietary
+- Plugin-friendly (future)
+
+---
+
+### 4.5 Habits & Gamification
+
+Inspired by Habitica, but grounded.
+
+- Habits
+- Streaks
+- XP and levels
+- Visual feedback
+- Positive reinforcement
+
+Rules:
+
+- Optional
+- Fully disable-able
+- Never affect core task logic
+- Motivational, not manipulative
+
+---
+
+### 4.6 Themes & Customization
+
+#### Default
+
+- Dark theme
+- Blue accent
+- Clean and neutral
+
+#### Systems
+
+- Fluent Design
+- Material 3 Expressive
+- Fully custom themes
+- And more themes.
+
+#### Options
+
+- Accent colors
+- Fonts
+- UI scale
+- Text size
+- Icons
+- Animations
+- Sounds
+- etc.
+
+Accessibility:
+
+- Reduced motion
+- Full keyboard navigation
+- WCAG AA contrast minimum
+
+---
+
+### 4.7 AI (Optional, Opt-In)
+
+AI is an **external utility layer**.
+
+Planned uses:
+
+- Speech-to-text (Gemini API)
+- Semantic search
+- Task suggestions
+- Productivity summaries
+- Natural language task entry
+- Automated note organization (decision pending)
+
+Rules:
+
+- Never required
+- Never blocking
+- Clearly labeled
+- Graceful failure
+- Fully disable-able
+
+---
+
+## 5. Inspiration: Principles, Not Copies
+
+- **Todoist** → Speed, low friction
+- **TickTick** → Feature cohesion
+- **Notion** → Structured content, gentle learning
+- **Obsidian** → Local data ownership
+- **Raycast** → Keyboard-first speed
+- **Habitica** → Positive engagement
+
+Avoid:
+
+- Mandatory accounts
+- Cloud lock-in
+- Over-gamification
+- Feature overload on first launch
+- Cluttered UI
+- Slow performance
+- Unpredictable state
+- Proprietary data formats
+- Poor accessibility
+- Inconsistent UX patterns
+- Ugly design
+
+---
+
+## 6. Technical Stack (Fixed)
+
+Frontend:
+
+- React
+- TypeScript
+- Vite
+
+UI:
+
+- Tailwind CSS
+- shadcn/ui
+
+State:
+
+- Zustand
+
+Desktop:
+
+- Tauri (Rust backend)
+
+Persistence:
+
+- SQLite (primary)
+- IndexedDB via localForage (fallback)
+
+Validation:
+
+- Zod
+
+Sync (future):
+
+- CRDT (Automerge or Yjs)
+
+AI:
+
+- Gemini API (optional)
+
+Tooling:
+
+- GitHub Actions
+- Commit lint
+- Semantic release
+
+---
+
+## 7. Architectural Laws (Non-Negotiable)
+
+1. **Single Source of Truth**
+   - UI state → `uiStore.tsx`
+   - Core data → `dataStore.tsx`
+   - No duplicate providers or hooks
+
+2. **Clear Separation**
+   - UI ≠ State ≠ Persistence ≠ Sync
+
+3. **Offline First**
+   - No feature assumes network access
+
+4. **Type Safety**
+   - No `any`
+   - Prefer `unknown`
+   - Use type-only imports
+
+5. **Predictable State**
+   - No hidden side effects
+   - Explicit updates only
+
+---
+
+## 8. Roadmap
+
+This roadmap is just a rough and flexible guide, please ask the user for more details if needed.
+
+### v0.1 — MVP
+
+- Local-only
+- Tasks
+- Kanban + list
+- Pomodoro
+- SQLite persistence
+- Settings
+- Default dark theme
+
+### v0.2
+
+- Sub-tasks
+- Markdown notes
+- Priority UI
+- Export / import
+
+### v0.3
+
+- Natural language quick add
+- Theme presets
+- Local fuzzy search
+
+### v1
+
+- Optional CRDT sync
+- Habits
+- Accessibility & keyboard UX
+
+### v1.5+
+
+- AI features
+- Plugin system
+- Documentation site
+
+---
+
+## 9. AI Agent Instructions (Critical)
+
+### Before Changes
+
+- Read repo structure
+- Identify patterns
+- Locate source of truth
+- Understand existing code
+- Understand which feature to change.
+- Understand the effects.
+
+### Planning
+
+- Always create a plan
+- Small, executable steps
+- and use the write_todos tool.
+- Categorize by time:
+  - Very Short (<30 sec)
+    - Short (<1 min)
+    - Medium (~5 min)
+    - Long (~10 min)
+    - Very Long (>10 min)
+- Break down long tasks
+- Execute sequentially
+- Verify after each step
+- No multi-tasking.
+
+### Execution
+
+- One focused change set
+- Verify build/tests
+- Remove deprecated code
+- Document changes
+- Update types
+- Follow established patterns
+
+### When Stuck
+
+- Stop
+- Re-read existing code
+- Search before inventing
+- Do not introduce new abstractions
+- Search online using the Google Search tool.
+- Also check the todos for incomplete or leftover (commonly in progress) tasks.
+  - If still stuck, find the in progress task, and make it complete, and resume the work from there.
+
+### Completion
+
+- Summarize changes
+- Provide commit message
+- List risks and follow-ups
+
+---
+
+## 10. Definition of Done
+
+A feature is complete when:
+
+- Works offline
+- Persists correctly
+- Does not break existing flows
+- Is understandable to the developer.
+- Respects Orbit’s philosophy
+
+---
+
+**End of GEMINI.md**
