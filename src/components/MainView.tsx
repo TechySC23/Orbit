@@ -1,6 +1,7 @@
 import { useUI } from "../state/uiStore";
 import { type Task } from "../state/uiTypes";
 import { CheckCircle2, Circle, Trash2 } from "lucide-react";
+import FocusView from "../views/FocusView";
 
 // == TaskList Component (local to MainView) ==
 const TaskItem = ({ task }: { task: Task }) => {
@@ -91,6 +92,8 @@ const MainView: React.FC<MainViewProps> = ({ children, className = "" }) => {
 		switch (currentRoute) {
 			case "tasks":
 				return <TaskList />;
+			case "focus":
+				return <FocusView />;
 			case "dashboard":
 				return <Dashboard />;
 			default:

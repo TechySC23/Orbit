@@ -1,7 +1,7 @@
 import React from "react";
 import { Search, Settings as SettingsIcon } from "lucide-react";
 import ThemeToggle from "./ui/ThemeToggle";
-import Pomodoro from "./Pomodoro";
+
 import { useUI } from "../state/uiStore";
 
 interface TopbarProps {
@@ -58,9 +58,7 @@ const Topbar: React.FC<TopbarProps> = ({ title = "Dashboard", className = "" }) 
 
 			{/* Right side - Utilities */}
 			<div className='flex-1 flex items-center justify-end space-x-2'>
-				<div className='hidden md:block'>
-					<Pomodoro />
-				</div>
+
 
 				<button
 					onClick={() => setSettingsModalOpen(true)}

@@ -1,0 +1,78 @@
+{
+  "structure": {
+    "folders": {
+      "src/state": "Contains global state logic (currently React Context, needs Zustand)",
+      "src/components": "UI components (Sidebar, Topbar, MainView, etc.)",
+      "src/layouts": "App shell layout",
+      "src/lib": "Static configuration (routes)",
+      "src/hooks": "Custom hooks (keyboard nav)"
+    },
+    "issues": [
+      "src/components/Topbar.tsx exists but is forbidden by GEMINI.md ('no top nav')",
+      "src/state/uiStore.tsx uses React Context instead of Zustand"
+    ]
+  },
+  "compileErrors": [],
+  "stateIssues": [
+    {
+      "file": "src/state/uiStore.tsx",
+      "type": "Architecture Violation",
+      "description": "Uses React Context API for global state.",
+      "expected": "Must use Zustand as per GEMINI.md Tech Stack.",
+      "severity": "Blocker"
+    },
+    {
+      "file": "src/layouts/AppShell.tsx",
+      "type": "State Isolation",
+      "description": "Manages 'sidebarCollapsed' state locally.",
+      "expected": "UI state like sidebar collapse should be in the global store for persistence/consistency.",
+      "severity": "Minor"
+    }
+  ],
+  "uiIssues": [
+    {
+      "file": "src/components/SettingsModal.tsx",
+      "type": "UX Violation",
+      "description": "Settings is implemented as a Modal.",
+      "expected": "Settings should be a full-screen view.",
+      "severity": "Major"
+    },
+    {
+      "file": "src/components/Pomodoro.tsx",
+      "type": "UX Violation",
+      "description": "Pomodoro is a small widget.",
+      "expected": "Pomodoro should be a 'Full focus screen' with a 'Big timer'.",
+      "severity": "Major"
+    },
+    {
+      "file": "src/components/Topbar.tsx",
+      "type": "Layout Violation",
+      "description": "Top bar is present.",
+      "expected": "Primary single sidebar only.",
+      "severity": "Major"
+    },
+    {
+      "file": "src/lib/routes.ts",
+      "type": "Missing Route",
+      "description": "Missing 'Focus' and 'Settings' in main navigation routes.",
+      "expected": "Routes for Focus and Settings should exist for full-screen navigation.",
+      "severity": "Major"
+    }
+  ],
+  "inconsistencies": [
+    {
+      "file": "src/components/MainView.tsx",
+      "type": "Missing Implementation",
+      "description": "Routes 'board' and 'habits' have no implementation in renderContent.",
+      "expected": "Placeholder or implementation for all defined routes.",
+      "severity": "Minor"
+    }
+  ],
+  "deadCode": [],
+  "suggestedNextSteps": [
+    "Refactor state to Zustand",
+    "Remove Topbar and fix AppShell layout",
+    "Convert Settings and Pomodoro to full-screen views",
+    "Update routing logic"
+  ]
+}

@@ -1,521 +1,624 @@
-# GEMINI.md
+# GEMINI.md — Orbit AI Operating Manual
 
-## Project Name: Orbit  
+## Project: **Orbit — Local-First Productivity & Focus System**
 
-**A Local-First, Offline-Capable Productivity System**
+### Purpose of This File (Critical)
 
----
+This file is the **primary AI context** for any AI system interacting with the Orbit codebase (Gemini CLI, automated coding assistants, refactoring tools, testing agents, etc.).  
+It defines:
 
-## 0. Purpose of This File (Critical)
+- What **Orbit is and why it exists**
+- What the **user experience goals are**
+- What the **technical architecture is**
+- How the AI should **think, plan, and code**
+- How to **debug, analyze, and fix errors**
+- How to **report progress and structures commits**
 
-This file exists primarily for **AI agents** (Gemini CLI, coding assistants, refactoring tools) that work on the Orbit codebase.  
-It is the **primary and authoritative source** for all architectural, philosophical, and procedural decisions.
-
-Its job is to:
-
-- **Prevent architectural drift**  
-  By defining fixed technical boundaries (Section 6) and non-negotiable laws (Section 7), all code must align with the established structure.
-
-- **Prevent duplicated state or logic**  
-  By mandating a Single Source of Truth for core data, we avoid inconsistent state and long-term maintenance issues.
-
-- **Prevent “tool loops”**  
-  The planning and execution rules in Section 9 force sequential, executable steps instead of endless planning.
-
-- **Force disciplined, verifiable development**  
-  Every change must map to the roadmap and satisfy the Definition of Done.
-
-- **Ensure consistent decision-making**  
-  This document acts as a canonical style guide, decision log, and scope boundary.
-
-If instructions here conflict with assumptions made by an AI (for example, assuming a cloud dependency), **this file overrides the AI’s assumptions**.
+This document is for **AI agents to consume** and follow as law.
 
 ---
 
-## 1. High-Level Vision
+## 1. Vision & Mission
 
-Orbit is a **local-first productivity application** designed to be a complete personal digital workspace.  
-Its core purpose is to manage **tasks, time, and focus** without reliance on external services.
+### 1.1 High-Level Product Vision
 
-Orbit must be:
+Orbit is a **local-first productivity application** that helps users take control of their tasks, focus sessions, time management, and daily workflows — **without requiring an account, cloud sync, or external dependencies**.
 
-- **Fully usable without internet access**  
-  All canonical data is stored locally (SQLite / IndexedDB). Network loss must never interrupt workflow.
+The product philosophy is:
 
-- **Fast on low-end hardware**  
-  Achieved through minimal dependencies, efficient React rendering, and a Tauri + Rust backend.
+- **Simple to start:** immediate value on first launch
+- **Deep when needed:** power features available without clutter
+- **Fast & private:** local data, offline first
+- **Consistent UI:** calm, clean, intuitive
+- **Contextual focus:** focus sessions are as important as task management
 
-- **Private by default**  
-  User data never leaves the device unless the user explicitly opts in. No telemetry. No analytics.
+Orbit aims to balance:
 
-- **Deeply customizable without being overwhelming**  
-  Customization is progressively disclosed. Simple defaults first, deep control later.
+- **Task mastery**
+- **Focus mastery**
+- **Visual clarity**
+- **Performance and scalability**
 
-- **Suitable for beginners and advanced users**  
-  Simple task entry for newcomers; keyboard-first, automation-ready workflows for power users.
+The design is inspired by:
 
-- **Easy to maintain and extend**  
-  Enforced via strict TypeScript, Zod validation, and separation of concerns.
+- **make10000hours.com** — bold, clean, focus-first Pomodoro UI
+- **TickTick** — intuitive navigation and task lists
+- **Todoist** — simplicity and structure
+- **Notion** — powerful but learnable
+- **Obsidian** — data ownership and extensibility
+- **Pomodoro apps with clean timer UIs** — distraction-free, readable, big timers
 
-Orbit is **not** a clone of any existing app.  
-It is a synthesis of proven ideas, built with modern tooling and a rigid architectural spine.
-
-Orbit must feel:
-
-- **Calm, not noisy**  
-- **Capable, not bloated**  
-- **Powerful, not confusing**
+The user experience should feel **grounded and consistent**, not gimmicky.
 
 ---
 
-## 2. Core Philosophy
+## 2. Target Users
 
-### 2.1 Local-First First Principles
+Orbit supports:
 
-Orbit follows the strongest interpretation of the local-first model:
+- **Students:** focus sessions + task planning + study routines
+- **Professionals:** project tasks + daily goals + timings
+- **Power users:** configuration, keyboard navigation, extensibility
+- **Casual users:** simple to install & use, no onboarding friction
 
-- Core features must work with **zero network access**
-- No account is required for core functionality
-- All user data lives locally by default
-- Sync, AI, and cloud features are **optional layers**, never dependencies
-
-Local-first is **not an optimization**.  
-It is the default operating mode, chosen for latency, reliability, and data ownership.
+Each user is supported without fragmentation of core workflows.
 
 ---
 
-### 2.2 Open Source ≠ Rough Edges
+## 3. Product Principles
 
-Orbit is open source, but:
+These principles govern UI, UX, and code:
 
-- UI must feel intentional and polished
-- Code must be readable and conventional
-- State must be predictable and explicit
-- Features must be finished or explicitly disabled
+### 3.1 Calm by Default
 
-Incomplete experiments must **never** ship as half-features.
+No visual noise, no distracting motion, no clutter.
 
----
+### 3.2 Predictable UX
 
-### 2.3 Simple Defaults, Infinite Depth
+Users should always know where they are; navigation must be consistent and clear.
 
-Orbit must be usable in under 5 minutes:
+### 3.3 Local-First
 
-- Add a task
-- Start a Pomodoro
-- Change a theme
-- View tasks
-- Basic keyboard navigation
-- Hyper fast navigation (command palette later)
+Data lives locally and persists across sessions without an external account or network.
 
-At the same time, Orbit must allow:
+### 3.4 Progressive Disclosure
 
-- Advanced workflows (filters, automation, scripting later)
-- Deep UI customization (fonts, colors, layouts, themes, colors, text size, etc.)
-- Keyboard-first navigation, and mouse for beginners.
-- Power-user features without friction
+Features expand from basic to advanced only as needed.
 
-Nothing advanced is forced on beginners.
+### 3.5 Keyboard First
+
+Every core action is accessible via keyboard.
+
+### 3.6 No Silent Failures
+
+Errors must be visible and actionable.
 
 ---
 
-## 3. Target Users
+## 4. Product Scope (Authoritative)
 
-### Students
+### 4.1 Core Features
 
-- Assignments and deadlines
-- Study sessions with Pomodoro
-- Habit building
-- Minimal friction note-taking
+**Tasks**
 
-### Professionals
+- Add/edit/delete tasks
+- Priority/Tags
+- Due dates + scheduling
+- Subtasks
+- Bulk actions
 
-- Project planning
-- Task prioritization
-- Time tracking via focus sessions
-- Keyboard-driven workflows
+**Focus Sessions**
 
-### Power Users
-
-- Custom themes
-- Plugin system (future)
-- Automation hooks
-- Full data ownership
-
-All three groups must be supported **without fragmenting the app**.
-
----
-
-## 4. Feature Scope (Authoritative)
-
-### 4.1 Task System
-
-The Task is the atomic unit of Orbit.
-
-- Tasks (name, description, priority, date{today, tomorrow, weekend, few hours later, evening, morning, etc.}, etc.)
-- Sub-tasks (recursive, shallow by default: max 3 levels, not quantitatively enforced)
-- Priorities (user-configurable)
-- Due dates and soft deadlines
-- Recurring tasks
-- States: todo / doing / done / archived, (customizable in future)
-- Filters (by state, priority, tags, due date)
-- Sorting (by due date, priority, creation date, custom)
-- Actions supported even as bulk (change state, delete, tag, prioritize, duplicate, copy.)
-- Quick add (natural language support planned)
-
-Bonus features:
-
-- Tags (user-defined, multi-select)
-- Import / export (JSON, CSV, markdown, etc. future)
-- Pinnable. (future)
-- Won't Do. (postpone like feature) [unplanned.]
-
-Archived tasks are hidden by default but always searchable.
-
----
-
-### 4.2 Views
-
-Views are **pure projections of state**.
-
-- Classic list view
-- Kanban view - columns based on task state (Drag and drop to change state)
-- Eisenhower Matrix (future)
-- Upcoming, Today, Overdue smart views
-- Custom views (future)
-- Future calendar/timeline support
-
-Bonus features:
-
-- Grouping (by tag, priority, due date)
-- Collapsible sections
-
-Views **do not own state**.  
-They render filtered/sorted data from the store.
-
----
-
-### 4.3 Pomodoro & Focus
-
-- Configurable Pomodoro cycles
+- Big, centered Pomodoro timer (like <https://app.make10000hours.com/#/pomodoro>)
+- Configurable timings
 - Task-linked sessions
-- Local persistence of sessions
-- Session history and stats (local only)
-- Optional short breaks and long breaks
-- Support for timeline view of the day's pomodoro sessions. (future)
+- Session history
 
-Pomodoro must:
+**Views**
 
-- Work offline
-- Survive reloads
-- Never block task interaction
-- Be customizable
-- Support notifications (local only)
-- Also support ambient sounds (optional, future.)
+- Inbox / All tasks
+- Today / Scheduled
+- Kanban board
+- Focus view (Pomodoro main)
+- Dashboard (insights)
+- Settings (full-screen)
 
----
+**Settings**
 
-### 4.4 Notes System
+- Global UI settings
+- Themes & fonts
+- Focus settings
+- Data export/import
+- AI toggle
+- Advanced user preferences
 
-Notes are task-attached by default, but extensible.
+**Dashboard**
 
-Baseline:
-
-- Markdown support
-- Inline formatting
-- Code blocks
-
-Planned:
-
-- Block-based note model (Notion-style, local, toggleable)
-- Structured storage (not raw strings)
-- Extensible block types
-
-Notes must be:
-
-- Fast
-- Exportable
-- Non-proprietary
-- Plugin-friendly (future)
+- Task counts (Today, Overdue, All)
+- Focus session summaries
+- Trends/metrics
+- Quick actions
 
 ---
 
-### 4.5 Habits & Gamification
+## 5. Design & UI Inspiration
 
-Inspired by Habitica, but grounded.
+Orbit doesn’t copy other apps, but it leans on:
 
-- Habits
-- Streaks
-- XP and levels
-- Visual feedback
-- Positive reinforcement
+**Pomodoro UI (make10000hours)**
 
-Rules:
+- Clean center stage timer
+- Minimal surrounding chrome
+- Task selection + status visible
+- Calm backgrounds, focus mode
 
-- Optional
-- Fully disable-able
-- Never affect core task logic
-- Motivational, not manipulative
+**Task List UI (Todoist, TickTick)**
 
----
+- Clear list hierarchy
+- Grouping
+- Search + filters
 
-### 4.6 Themes & Customization
+**Settings & Customizations**
 
-#### Default
+- Deep but discoverable
+- Split into categories
+- Full screen
 
-- Dark theme
-- Blue accent
-- Clean and neutral
+**Accessible Text & Fonts**
 
-#### Systems
+- Adjustable global fonts
+- High readability
+- Easy contrast
 
-- Fluent Design
-- Material 3 Expressive
-- Fully custom themes
-- And more themes.
+**Dashboard Insights**
 
-#### Options
-
-- Accent colors
-- Fonts
-- UI scale
-- Text size
-- Icons
-- Animations
-- Sounds
-- etc.
-
-Accessibility:
-
-- Reduced motion
-- Full keyboard navigation
-- WCAG AA contrast minimum
+- Trend visualizations
+- Productivity feedback
 
 ---
 
-### 4.7 AI (Optional, Opt-In)
+## 6. Architecture (Required)
 
-AI is an **external utility layer**.
+### 6.1 Tech Stack
 
-Planned uses:
-
-- Speech-to-text (Gemini API)
-- Semantic search
-- Task suggestions
-- Productivity summaries
-- Natural language task entry
-- Automated note organization (decision pending)
-
-Rules:
-
-- Never required
-- Never blocking
-- Clearly labeled
-- Graceful failure
-- Fully disable-able
-
----
-
-## 5. Inspiration: Principles, Not Copies
-
-- **Todoist** → Speed, low friction
-- **TickTick** → Feature cohesion
-- **Notion** → Structured content, gentle learning
-- **Obsidian** → Local data ownership
-- **Raycast** → Keyboard-first speed
-- **Habitica** → Positive engagement
-
-Avoid:
-
-- Mandatory accounts
-- Cloud lock-in
-- Over-gamification
-- Feature overload on first launch
-- Cluttered UI
-- Slow performance
-- Unpredictable state
-- Proprietary data formats
-- Poor accessibility
-- Inconsistent UX patterns
-- Ugly design
-
----
-
-## 6. Technical Stack (Fixed)
-
-Frontend:
-
-- React
-- TypeScript
-- Vite
-
-UI:
-
-- Tailwind CSS
-- shadcn/ui
-
-State:
-
-- Zustand
-
-Desktop:
-
-- Tauri (Rust backend)
-
-Persistence:
-
-- SQLite (primary)
-- IndexedDB via localForage (fallback)
-
-Validation:
-
-- Zod
-
-Sync (future):
-
-- CRDT (Automerge or Yjs)
-
-AI:
-
-- Gemini API (optional)
-
-Tooling:
-
-- GitHub Actions
-- Commit lint
-- Semantic release
+- **Frontend:** React + TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **State:** Zustand
+- **Persistence:** IndexedDB fallback (localForage), SQLite via Tauri (desktop)
+- **Validation:** Zod
+- **Bundler:** Vite
+- **Desktop Shell:** Tauri (optional)
+- **Optional Sync:** CRDT (future)
+- **Optional AI:** Gemini API / local LLM (opt-in)
 
 ---
 
 ## 7. Architectural Laws (Non-Negotiable)
 
 1. **Single Source of Truth**
-   - UI state → `uiStore.tsx`
-   - Core data → `dataStore.tsx`
-   - No duplicate providers or hooks
+   - View state: `viewStore.ts`
+   - Core data: `dataStore.ts`
+   - No duplicate context providers
 
-2. **Clear Separation**
-   - UI ≠ State ≠ Persistence ≠ Sync
+2. **Separation of Concerns**
+   - UI ← state ← persistence
+   - UI components do not touch database directly
 
 3. **Offline First**
-   - No feature assumes network access
+   - No assumption of network
+   - Fail gracefully when optional features break
 
 4. **Type Safety**
    - No `any`
-   - Prefer `unknown`
    - Use type-only imports
+   - Strict TypeScript
 
 5. **Predictable State**
    - No hidden side effects
-   - Explicit updates only
+   - All actions visible and traceable
 
 ---
 
-## 8. Roadmap
+## 8. UX Rules
 
-This roadmap is just a rough and flexible guide, please ask the user for more details if needed.
+### Sidebar Navigation
 
-### v0.1 — MVP
+- Primary single sidebar (no top nav)
+- Icons + labels
+- Collapsible + dynamic modes
 
-- Local-only
-- Tasks
-- Kanban + list
-- Pomodoro
-- SQLite persistence
-- Settings
-- Default dark theme
+### Pomodoro View
 
-### v0.2
+- Full focus screen
+- Big timer
+- Task link selector
+- Start/pause/stop
+- Optional ambient mode
 
-- Sub-tasks
-- Markdown notes
-- Priority UI
-- Export / import
+### Task Views
 
-### v0.3
+- List & Kanban
+- Filters + sorts
+- Drag and drop (future)
 
+### Settings
+
+- Full-screen
+- Split navigation
+
+---
+
+## 9. Planning & Execution Protocol
+
+Before any code change, the AI must:
+
+1. **Analyze context**
+2. **Produce a plan**
+3. **Break into incremental steps**
+4. **List deliverables**
+5. **Run build/tests**
+6. **Report errors**
+7. **Revise or continue**
+
+Plans use:
+
+- Steps
+- Priority
+- Files affected
+- Commit message
+
+Example output format:
+
+# GEMINI.md — Orbit AI Operating Manual
+
+## Project: **Orbit — Local-First Productivity & Focus System**
+
+### Purpose of This File (Critical)
+
+This file is the **primary AI context** for any AI system interacting with the Orbit codebase (Gemini CLI, automated coding assistants, refactoring tools, testing agents, etc.).  
+It defines:
+
+- What **Orbit is and why it exists**
+- What the **user experience goals are**
+- What the **technical architecture is**
+- How the AI should **think, plan, and code**
+- How to **debug, analyze, and fix errors**
+- How to **report progress and structures commits**
+
+This document is for **AI agents to consume** and follow as law.
+
+---
+
+## 1. Vision & Mission
+
+### 1.1 High-Level Product Vision
+
+Orbit is a **local-first productivity application** that helps users take control of their tasks, focus sessions, time management, and daily workflows — **without requiring an account, cloud sync, or external dependencies**.
+
+The product philosophy is:
+
+- **Simple to start:** immediate value on first launch
+- **Deep when needed:** power features available without clutter
+- **Fast & private:** local data, offline first
+- **Consistent UI:** calm, clean, intuitive
+- **Contextual focus:** focus sessions are as important as task management
+
+Orbit aims to balance:
+
+- **Task mastery**
+- **Focus mastery**
+- **Visual clarity**
+- **Performance and scalability**
+
+The design is inspired by:
+
+- **make10000hours.com** — bold, clean, focus-first Pomodoro UI
+- **TickTick** — intuitive navigation and task lists
+- **Todoist** — simplicity and structure
+- **Notion** — powerful but learnable
+- **Obsidian** — data ownership and extensibility
+- **Pomodoro apps with clean timer UIs** — distraction-free, readable, big timers
+
+The user experience should feel **grounded and consistent**, not gimmicky.
+
+---
+
+## 2. Target Users
+
+Orbit supports:
+
+- **Students:** focus sessions + task planning + study routines
+- **Professionals:** project tasks + daily goals + timings
+- **Power users:** configuration, keyboard navigation, extensibility
+- **Casual users:** simple to install & use, no onboarding friction
+
+Each user is supported without fragmentation of core workflows.
+
+---
+
+## 3. Product Principles
+
+These principles govern UI, UX, and code:
+
+### 3.1 Calm by Default
+
+No visual noise, no distracting motion, no clutter.
+
+### 3.2 Predictable UX
+
+Users should always know where they are; navigation must be consistent and clear.
+
+### 3.3 Local-First
+
+Data lives locally and persists across sessions without an external account or network.
+
+### 3.4 Progressive Disclosure
+
+Features expand from basic to advanced only as needed.
+
+### 3.5 Keyboard First
+
+Every core action is accessible via keyboard.
+
+### 3.6 No Silent Failures
+
+Errors must be visible and actionable.
+
+---
+
+## 4. Product Scope (Authoritative)
+
+### 4.1 Core Features
+
+**Tasks**
+
+- Add/edit/delete tasks
+- Priority/Tags
+- Due dates + scheduling
+- Subtasks
+- Bulk actions
+
+**Focus Sessions**
+
+- Big, centered Pomodoro timer (like <https://app.make10000hours.com/#/pomodoro>)
+- Configurable timings
+- Task-linked sessions
+- Session history
+
+**Views**
+
+- Inbox / All tasks
+- Today / Scheduled
+- Kanban board
+- Focus view (Pomodoro main)
+- Dashboard (insights)
+- Settings (full-screen)
+
+**Settings**
+
+- Global UI settings
+- Themes & fonts
+- Focus settings
+- Data export/import
+- AI toggle
+- Advanced user preferences
+
+**Dashboard**
+
+- Task counts (Today, Overdue, All)
+- Focus session summaries
+- Trends/metrics
+- Quick actions
+
+---
+
+## 5. Design & UI Inspiration
+
+Orbit doesn’t copy other apps, but it leans on:
+
+**Pomodoro UI (make10000hours)**
+
+- Clean center stage timer
+- Minimal surrounding chrome
+- Task selection + status visible
+- Calm backgrounds, focus mode
+
+**Task List UI (Todoist, TickTick)**
+
+- Clear list hierarchy
+- Grouping
+- Search + filters
+
+**Settings & Customizations**
+
+- Deep but discoverable
+- Split into categories
+- Full screen
+
+**Accessible Text & Fonts**
+
+- Adjustable global fonts
+- High readability
+- Easy contrast
+
+**Dashboard Insights**
+
+- Trend visualizations
+- Productivity feedback
+
+---
+
+## 6. Architecture (Required)
+
+### 6.1 Tech Stack
+
+- **Frontend:** React + TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **State:** Zustand
+- **Persistence:** IndexedDB fallback (localForage), SQLite via Tauri (desktop)
+- **Validation:** Zod
+- **Bundler:** Vite
+- **Desktop Shell:** Tauri (optional)
+- **Optional Sync:** CRDT (future)
+- **Optional AI:** Gemini API / local LLM (opt-in)
+
+---
+
+## 7. Architectural Laws (Non-Negotiable)
+
+1. **Single Source of Truth**
+   - View state: `viewStore.ts`
+   - Core data: `dataStore.ts`
+   - No duplicate context providers
+
+2. **Separation of Concerns**
+   - UI ← state ← persistence
+   - UI components do not touch database directly
+
+3. **Offline First**
+   - No assumption of network
+   - Fail gracefully when optional features break
+
+4. **Type Safety**
+   - No `any`
+   - Use type-only imports
+   - Strict TypeScript
+
+5. **Predictable State**
+   - No hidden side effects
+   - All actions visible and traceable
+
+---
+
+## 8. UX Rules
+
+### Sidebar Navigation
+
+- Primary single sidebar (no top nav)
+- Icons + labels
+- Collapsible + dynamic modes
+
+### Pomodoro View
+
+- Full focus screen
+- Big timer
+- Task link selector
+- Start/pause/stop
+- Optional ambient mode
+
+### Task Views
+
+- List & Kanban
+- Filters + sorts
+- Drag and drop (future)
+
+### Settings
+
+- Full-screen
+- Split navigation
+- Tooltips for feature descriptions
+- Keyboard shortcuts
+- Dark mode
+
+---
+
+## 9. Planning & Execution Protocol
+
+Before any code change, the AI must:
+
+1. **Analyze context**
+2. **Produce a plan**
+3. **Break into incremental steps**
+4. **List deliverables**
+5. **Run build/tests**
+6. **Report errors**
+7. **Revise or continue**
+
+Plans use:
+
+- Steps
+- Priority
+- Files affected
+- Commit message
+
+Example output format:
+
+Plan:
+1.
+2.
+...
+
+Deliverables:
+
+path/to/file.ext
+
+Commit Message:
+<type(scope): description>
+
+---
+
+## 10. Troubleshooting & Recovery
+
+If an error occurs:
+
+1. Report exact error
+2. Locate source file + line
+3. Inspect related state changes
+4. Propose minimal fix
+5. Verify build
+
+If stuck:
+
+- Use file search to confirm code
+- Don’t generate code until context is clear
+- Break ambiguous tasks into searchable steps
+
+---
+
+## 11. AI Prompts Guidelines
+
+When generating prompts:
+
+- Ask for **analysis before action**
+- NEVER generate code without a plan
+- Reference `GEMINI.md` for goals
+- Use console outputs to verify
+- Fail gracefully
+
+---
+
+## 12. Iterative Roadmap
+
+**MVP**
+
+- Clean layout
+- Full Pomodoro focus view
+- Task list + scheduling
+- Dashboard insights
+
+**Next**
+
+- Kanban board
+- Filters, tags
 - Natural language quick add
-- Theme presets
-- Local fuzzy search
+- Export/import
 
-### v1
+**Later**
 
-- Optional CRDT sync
-- Habits
-- Accessibility & keyboard UX
-
-### v1.5+
-
-- AI features
+- CRDT sync
+- AI assisted quick add
 - Plugin system
-- Documentation site
+- App documentation
 
 ---
 
-## 9. AI Agent Instructions (Critical)
-
-### Before Changes
-
-- Read repo structure
-- Identify patterns
-- Locate source of truth
-- Understand existing code
-- Understand which feature to change.
-- Understand the effects.
-
-### Planning
-
-- Always create a plan
-- Small, executable steps
-- and use the write_todos tool.
-- Categorize by time:
-  - Very Short (<30 sec)
-    - Short (<1 min)
-    - Medium (~5 min)
-    - Long (~10 min)
-    - Very Long (>10 min)
-- Break down long tasks
-- Execute sequentially
-- Verify after each step
-- No multi-tasking.
-
-### Execution
-
-- One focused change set
-- Verify build/tests
-- Remove deprecated code
-- Document changes
-- Update types
-- Follow established patterns
-
-### When Stuck
-
-- Stop
-- Re-read existing code
-- Search before inventing
-- Do not introduce new abstractions
-- Search online using the Google Search tool.
-- Also check the todos for incomplete or leftover (commonly in progress) tasks.
-  - If still stuck, find the in progress task, and make it complete, and resume the work from there.
-
-### Completion
-
-- Summarize changes
-- Provide commit message
-- List risks and follow-ups
-
----
-
-## 10. Definition of Done
+## 13. Definition of Done
 
 A feature is complete when:
 
 - Works offline
-- Persists correctly
-- Does not break existing flows
-- Is understandable to the developer.
-- Respects Orbit’s philosophy
-
----
-
-**End of GEMINI.md**
+- Persists data
+- Passes build/tests
+- Matches UX goals
+- Uses single source of truth
+- Is understandable to humans.
