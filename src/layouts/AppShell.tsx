@@ -7,7 +7,7 @@ import AddButton from "../components/AddButton";
 import LoadingScreen from "../components/LoadingScreen";
 
 const AppShellContent: React.FC = () => {
-	const { settings } = useUIStore();
+	const { settings, currentRoute } = useUIStore();
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -27,15 +27,18 @@ const AppShellContent: React.FC = () => {
 		}
 	}, [settings.font, settings.theme]);
 
+	// FAB visibility logic
+	const isTaskCentricRoute = !["dashboard", "focus", "settings"].includes(currentRoute);
+
 	return (
-		<div className='h-screen w-full flex bg-slate-950 text-slate-100 font-sans overflow-hidden selection:bg-sky-500/30' style={{ fontFamily: "var(--ui-font)" }}>
+		<div className='h-screen w-full flex bg-slate-950 text-slate-100 font-sans overflow-hidden selection:bg-sky-500/30' style={{ fontFamily: "var(--font-family, 'Inter')" }}>
 			{isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 			
 			<Sidebar />
 
 			<div className='flex-1 flex flex-col min-w-0 h-full relative'>
 				<MainView />
-				<AddButton />
+				{isTaskCentricRoute && <AddButton />}
 			</div>
 
 			<AddTaskModal />
