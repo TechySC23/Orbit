@@ -87,7 +87,7 @@ const SettingsView = () => {
 				</section>
 
 				<footer className='pt-12 text-center text-slate-600 border-t border-slate-800'>
-					<p className='text-xs font-mono uppercase tracking-widest'>Orbit v0.1</p>
+					<p className='text-xs font-mono uppercase tracking-widest'>Orbit v0.1.3</p>
 				</footer>
 			</div>
 		</div>
