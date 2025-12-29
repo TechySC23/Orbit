@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { Plus } from "lucide-react";
-import { useUI } from "../state/uiStore";
+import { useUIStore } from "../state/uiStore";
 
 const AddButton = () => {
-	const { setAddTaskModalOpen, settings } = useUI();
+	const { setAddTaskModalOpen, settings } = useUIStore();
 
 	const openModal = useCallback(() => {
 		setAddTaskModalOpen(true);
@@ -11,7 +11,14 @@ const AddButton = () => {
 
 	useEffect(() => {
 		const handleKeyPress = (e: KeyboardEvent) => {
-			if (e.key.toLowerCase() === "n") {
+			const target = e.target as HTMLElement;
+			const isInput = 
+				target.tagName === "INPUT" || 
+				target.tagName === "TEXTAREA" || 
+				target.tagName === "SELECT" ||
+				target.isContentEditable;
+
+			if (e.key.toLowerCase() === "n" && !isInput) {
 				e.preventDefault();
 				openModal();
 			}

@@ -1,38 +1,21 @@
-import React, { useCallback, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
-import IconButton from "./IconButton";
-import { useUI } from "../../state/uiStore";
+import { useUIStore } from "../../state/uiStore";
 
-const ThemeToggle: React.FC = () => {
-	const { settings, setSettings } = useUI();
+const ThemeToggle = () => {
+	const { settings, setSettings } = useUIStore();
 	const isDark = settings.theme === "dark";
 
-	const toggleTheme = useCallback(() => {
+	const toggleTheme = () => {
 		setSettings({ theme: isDark ? "light" : "dark" });
-	}, [isDark, setSettings]);
-
-	useEffect(() => {
-		const handleKeyPress = (e: KeyboardEvent) => {
-			if (e.key === ".") {
-				e.preventDefault();
-				toggleTheme();
-			}
-		};
-		window.addEventListener("keydown", handleKeyPress);
-		return () => window.removeEventListener("keydown", handleKeyPress);
-	}, [toggleTheme]);
+	};
 
 	return (
-		<IconButton
-			aria-label={`Switch to ${isDark ? "light" : "dark"} theme (.)`}
-			title={`Switch to ${isDark ? "light" : "dark"} theme (.)`}
+		<button
 			onClick={toggleTheme}
-			variant='ghost'
-			size='md'>
-			{isDark ?
-				<Sun className='h-5 w-5' />
-			:	<Moon className='h-5 w-5' />}
-		</IconButton>
+			className="p-2 rounded-xl bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition-all border border-slate-700/50"
+			aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}>
+			{isDark ? <Sun className='h-5 w-5' /> : <Moon className='h-5 w-5' />}
+		</button>
 	);
 };
 

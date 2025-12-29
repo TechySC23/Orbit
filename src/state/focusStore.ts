@@ -1,9 +1,9 @@
 import { create, type StateCreator } from "zustand";
 
-type TimerMode = "session" | "shortBreak" | "longBreak";
+type TimerMode = "focus" | "shortBreak" | "longBreak";
 
 const MODE_DURATIONS: Record<TimerMode, number> = {
-	session: 25 * 60,
+	focus: 25 * 60,
 	shortBreak: 5 * 60,
 	longBreak: 15 * 60,
 };
@@ -21,8 +21,8 @@ interface FocusState {
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 
 const createFocusStore: StateCreator<FocusState> = (set, get) => ({
-	mode: "session",
-	timeLeft: MODE_DURATIONS.session,
+	mode: "focus",
+	timeLeft: MODE_DURATIONS.focus,
 	isActive: false,
 
 	setMode: (mode) => {

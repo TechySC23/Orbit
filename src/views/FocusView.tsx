@@ -25,7 +25,7 @@ const FocusView = () => {
 
 	const getModeIcon = (m: typeof mode) => {
 		switch (m) {
-			case "session":
+			case "focus":
 				return <Brain size={20} />;
 			case "shortBreak":
 				return <Coffee size={20} />;
@@ -41,7 +41,7 @@ const FocusView = () => {
             
             {/* Mode Selectors */}
             <div className="flex bg-slate-800/50 p-1.5 rounded-full mb-12 border border-slate-700/50">
-                {(["session", "shortBreak", "longBreak"] as const).map((m) => (
+                {(["focus", "shortBreak", "longBreak"] as const).map((m) => (
                     <button
                         key={m}
                         onClick={() => setMode(m)}
@@ -54,21 +54,21 @@ const FocusView = () => {
                         `}
                     >
                          {getModeIcon(m)}
-                         {m === "session" ? "Focus" : m === "shortBreak" ? "Short" : "Long"}
+                         {m === "focus" ? "Focus" : m === "shortBreak" ? "Short Break" : "Long Break"}
                     </button>
                 ))}
             </div>
 
 			{/* Main Timer Display */}
 			<div className='relative mb-12 group'>
-                {/* Subtle ring background? Maybe later. Keeping it ultra clean for now. */}
 				<div 
-                    className='text-[12rem] leading-none font-bold text-slate-100 font-mono tracking-tighter tabular-nums select-none'
+                    className='text-[12rem] leading-none font-black text-slate-100 tabular-nums select-none tracking-tighter'
+                    style={{ fontFamily: "var(--font-family, 'Inter'), monospace" }}
                     aria-label={`Time remaining: ${formatTime(timeLeft)}`}
                     >
 					{formatTime(timeLeft)}
 				</div>
-                <div className="text-center text-slate-500 text-lg font-medium tracking-wide uppercase mt-4">
+                <div className="text-center text-slate-500 text-lg font-bold tracking-[0.2em] uppercase mt-4">
                     {isActive ? "Flow State" : "Ready"}
                 </div>
 			</div>

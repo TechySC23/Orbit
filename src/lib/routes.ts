@@ -3,7 +3,7 @@
  * Includes `lucide-react` icons for consistent UI
  */
 
-import { LayoutDashboard, Kanban, ListTodo, Repeat, Brain, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Kanban, ListTodo, Repeat, Brain, Settings as SettingsIcon, type LucideIcon } from "lucide-react";
 
 export interface Route {
 	id: string;
@@ -17,6 +17,7 @@ export const routes: Route[] = [
 	{ id: "tasks", label: "Tasks", icon: ListTodo },
 	{ id: "focus", label: "Focus", icon: Brain },
 	{ id: "habits", label: "Habits", icon: Repeat },
+	{ id: "settings", label: "Settings", icon: SettingsIcon },
 ];
 
 export default routes;

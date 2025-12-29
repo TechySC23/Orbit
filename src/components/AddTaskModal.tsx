@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useUI } from "../state/uiStore";
+import { useUIStore } from "../state/uiStore";
 import { type Task } from "../state/uiTypes";
 import { X } from "lucide-react";
 
@@ -10,7 +10,7 @@ const useFocusTrap = (isOpen: boolean) => {
 	useEffect(() => {
 		if (!isOpen || !modalRef.current) return;
 
-        const currentModalRef = modalRef.current; // Capture the ref value
+		const currentModalRef = modalRef.current; // Capture the ref value
 
 		const focusableElements = currentModalRef.querySelectorAll<HTMLElement>(
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
@@ -48,7 +48,7 @@ const useFocusTrap = (isOpen: boolean) => {
 };
 
 const AddTaskModal = () => {
-	const { isAddTaskModalOpen, setAddTaskModalOpen, addTask } = useUI();
+	const { isAddTaskModalOpen, setAddTaskModalOpen, addTask } = useUIStore();
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [dueDate, setDueDate] = useState("");
